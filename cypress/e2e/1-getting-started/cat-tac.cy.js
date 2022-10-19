@@ -5,29 +5,33 @@ describe('Automação Cac-tac', () => {
         cy.visit('https://cac-tat.s3.eu-central-1.amazonaws.com/index.html')
     })
 
+    beforeEach(() => {
+        cy.reload()
+    })
+
     it('Acessar home', () => {
         
         cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT')
     })
 
     it("Preencha campos obrigárotios e envia formulário", () => {
-        const longText = 'Teste, Teste,Teste, Teste,Teste, Teste,Teste, Teste,Teste, Teste,Teste, Teste,Teste, Teste,Teste, Teste,Teste, Teste,Teste, Teste,Teste, Teste,'
-        cy.get('#firstName').type('Leonaro')
+        const longText = 'Teste, Teste,Teste, Teste,Teste, Teste,Teste,'
+        cy.get('#firstName').type('Leonardo')
         cy.get('#lastName').type('Teste')
         cy.get('#email').type('leonardo@teste.com')
         cy.get('#open-text-area').type(longText, {delay: 0})
 
-        cy.get('button[type="submit"]').click()
+        cy.contains('button', 'Enviar').click()
         cy.get('.success').should('be.visible')
     })
 
     it('E-mail com formatação inválida', () => {
-        cy.get('#firstName').type('Leonaro')
+        cy.get('#firstName').type('Leonardo')
         cy.get('#lastName').type('Teste')
         cy.get('#email').type('leonardo_teste.com')
         cy.get('#open-text-area').type('Teste')
 
-        cy.get('button[type="submit"]').click()
+        cy.contains('button', 'Enviar').click()
         cy.get('.error').should('be.visible')
     })
 
@@ -37,13 +41,73 @@ describe('Automação Cac-tac', () => {
     })
 
     it('Validação Campo telefone obrigatório', () => {
-        cy.get('#firstName').type('Leonaro')
-        cy.get('#lastName').type('Teste')
+        cy.get('#firstName').type('Leonardo')
+        cy.get('#lastName').type('Soares')
         cy.get('#email').type('leonardo@teste.com')
         cy.get('#phone-checkbox').click()
         cy.get('#open-text-area').type('Teste')
 
-        cy.get('button[type="submit"]').click()
+        cy.contains('button', 'Enviar').click()
         cy.get('.error').should('be.visible')
+    })
+
+    it('Preenche e limpa campo nome, sobrenome, email e telefone', () => {
+        
+        cy.get('#firstName').type('Leonardo').should('have.value', 'Leonardo')
+            .clear().should('have.value', '')
+        
+        cy.get('#lastName').type('Soares').should('have.value', 'Soares')
+            .clear().should('have.value', '')
+
+        cy.get('#email').type('leonardo@teste.com').should('have.value', 'leonardo@teste.com')
+            .clear().should('have.value', '')
+
+        cy.get('#phone').type('11987654321').should('have.value', '11987654321')
+            .clear().should('have.value', '')
+        
+        cy.get('#open-text-area').type('Teste,teste')
+            .should('have.value', 'Teste,teste')
+            .clear().should('have.value', '')
+        
+    })
+
+    it('Mensagem de erro sem preencher campos obrigatórios', () => {
+        cy.contains('button', 'Enviar').click()
+        cy.get('.error').should('be.visible')
+
+    })
+
+    it('Comando customizados para testes de sucesso', () => {
+        cy.fillMandatoryFieldsAndSubmit()
+        cy.get('.success').should('be.visible')
+    })
+
+    it('seleciona na lista um produto por seu texto', () => {
+        cy.get('#product').select('YouTube')
+            .should('have.value', 'youtube')
+    })
+
+    it('Seleciona um produto (Mentoria) por seu valor ', () => {
+        cy.get('#product').select('mentoria')
+            .should('have.value', 'mentoria')
+    })
+
+    it('Seleciona um produto (Blog) por seu indice', () => {
+        cy.get('#product').select([1])
+            .should('have.value', 'blog')
+
+    })
+
+    it('Marca radio button (Feedback)', () => {
+        cy.get('input[type="radio"][value="feedback"]').check()
+            .should('have.value', 'feedback')
+    })
+
+    it('Marcar cada tipo de atendimento', () => {
+        cy.get('input[type="radio"]')
+            .should('have.length', 3).each(function($radio){
+                cy.wrap($radio).check()
+                cy.wrap($radio).should('be.checked')
+            })
     })
 })
