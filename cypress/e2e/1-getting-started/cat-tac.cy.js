@@ -36,7 +36,7 @@ describe('Automação Cac-tac', () => {
         cy.get('#phone').type('asdasds').should('have.value', '')
     })
 
-    it('Campo telefone obrigatório', () => {
+    it('Validação Campo telefone obrigatório', () => {
         cy.get('#firstName').type('Leonaro')
         cy.get('#lastName').type('Teste')
         cy.get('#email').type('leonardo@teste.com')
