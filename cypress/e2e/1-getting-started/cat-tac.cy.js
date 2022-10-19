@@ -110,4 +110,8 @@ describe('Automação Cac-tac', () => {
                 cy.wrap($radio).should('be.checked')
             })
     })
+
+    it('', () => {
+        
+    })
 })
