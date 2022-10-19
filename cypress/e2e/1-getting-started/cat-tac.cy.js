@@ -44,7 +44,7 @@ describe('Automação Cac-tac', () => {
         cy.get('#firstName').type('Leonardo')
         cy.get('#lastName').type('Soares')
         cy.get('#email').type('leonardo@teste.com')
-        cy.get('#phone-checkbox').click()
+        cy.get('#phone-checkbox').check()
         cy.get('#open-text-area').type('Teste')
 
         cy.contains('button', 'Enviar').click()
@@ -111,7 +111,35 @@ describe('Automação Cac-tac', () => {
             })
     })
 
-    it('', () => {
-        
+    it('Marcar e desemarcar checkbox', () => {
+        cy.get('input[type="checkbox"]').check()
+        .last().should('be.checked')
+        .uncheck().should('not.be.checked')
+    })
+
+    it('Seleciona e anexa arquivo da pasta fixtures', () => {
+        cy.get('input[type="file"]')
+            .should('not.have.value')
+            .selectFile('./cypress/fixtures/example.json')
+            .should(function($input){
+               expect($input[0].files[0].name).to.equal('example.json')
+            })
+    })
+
+    it('Seleciona um arquivo simulando um drag-and-drop', () => {
+        cy.get('input[type="file"]')
+        .should('not.have.value')
+        .selectFile('./cypress/fixtures/example.json', { action: 'drag-drop' })
+        .should(function($input){
+           expect($input[0].files[0].name).to.equal('example.json')
+        })
+    })
+
+    it('Seleciona um arquivo utilizando uam fixture utilizando alias', () => {
+        cy.fixture('example.json').as('sampleFile')
+        cy.get('input[type="file"]').selectFile('@sampleFile')
+        .should(function($input){
+            expect($input[0].files[0].name).to.equal('example.json')
+         })
     })
 })
