@@ -1,21 +1,23 @@
 /// <reference types='cypress'/>
 
 describe('Automação Cac-tac', () => {
+    
     before(() => {
         cy.visit('https://cac-tat.s3.eu-central-1.amazonaws.com/index.html')
     })
 
-    beforeEach(() => {
+    beforeEach(() => {  
         cy.reload()
     })
-
+   
     it('Acessar home', () => {
         
         cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT')
     })
 
     it("Preencha campos obrigárotios e envia formulário", () => {
-        const longText = 'Teste, Teste,Teste, Teste,Teste, Teste,Teste,'
+        const longText = Cypress._.repeat('Teste, ', 10) 
+
         cy.get('#firstName').type('Leonardo')
         cy.get('#lastName').type('Teste')
         cy.get('#email').type('leonardo@teste.com')
@@ -127,6 +129,7 @@ describe('Automação Cac-tac', () => {
     })
 
     it('Seleciona um arquivo simulando um drag-and-drop', () => {
+        
         cy.get('input[type="file"]')
         .should('not.have.value')
         .selectFile('./cypress/fixtures/example.json', { action: 'drag-drop' })
@@ -135,11 +138,21 @@ describe('Automação Cac-tac', () => {
         })
     })
 
-    it('Seleciona um arquivo utilizando uam fixture utilizando alias', () => {
+    it('Seleciona um arquivo utilizando uma fixture utilizando alias', () => {
+         
         cy.fixture('example.json').as('sampleFile')
         cy.get('input[type="file"]').selectFile('@sampleFile')
         .should(function($input){
-            expect($input[0].files[0].name).to.equal('example.json')
+            expect($input[0].files[0].name)
          })
+      
     })
+
+    it('Encontre o gato no site e altera texto', () => {
+        cy.get('#cat').invoke('show')
+            .should('be.visible')
+        cy.get('#title').invoke('text', 'Altera texto')
+        cy.get('#subtitle').invoke('text', 'Adicionar emoji 🐱‍🚀')
+    })
+    
 })
