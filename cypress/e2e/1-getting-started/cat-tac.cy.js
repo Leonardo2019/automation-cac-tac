@@ -154,5 +154,10 @@ describe('Automação Cac-tac', () => {
         cy.get('#title').invoke('text', 'Altera texto')
         cy.get('#subtitle').invoke('text', 'Adicionar emoji 🐱‍🚀')
     })
+
+    it('Utilizando select', () => {
+        cy.get('#product').eq(0).select(2).should('be.visible')
+        cy.get('[type="radio"]').eq(1).check().should('be.visible')
+    })
     
 })
