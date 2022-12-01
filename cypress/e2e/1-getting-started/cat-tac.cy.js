@@ -18,7 +18,7 @@ describe('Automação Cac-tac', () => {
     it("Preencha campos obrigárotios e envia formulário", () => {
         const longText = Cypress._.repeat('Teste, ', 10) 
 
-        cy.get('#firstName').type('Leonardo')
+        cy.get('#firstName').type('Leonardo').should('have.attr', 'type', 'text')
         cy.get('#lastName').type('Teste')
         cy.get('#email').type('leonardo@teste.com')
         cy.get('#open-text-area').type(longText, {delay: 0})
@@ -40,13 +40,14 @@ describe('Automação Cac-tac', () => {
     it('Campo telefone validação valor não númerico e continua vazio', () => {
 
         cy.get('#phone').type('asdasds').should('have.value', '')
+            .should('have.attr', 'type', 'number')
     })
 
     it('Validação Campo telefone obrigatório', () => {
         cy.get('#firstName').type('Leonardo')
         cy.get('#lastName').type('Soares')
         cy.get('#email').type('leonardo@teste.com')
-        cy.get('#phone-checkbox').check()
+        cy.get('#phone-checkbox').check().should('have.attr', 'type', 'checkbox')
         cy.get('#open-text-area').type('Teste')
 
         cy.contains('button', 'Enviar').click()
@@ -102,7 +103,7 @@ describe('Automação Cac-tac', () => {
 
     it('Marca radio button (Feedback)', () => {
         cy.get('input[type="radio"][value="feedback"]').check()
-            .should('have.value', 'feedback')
+            .should('have.value', 'feedback').and('have.attr', 'type', 'radio')
     })
 
     it('Marcar cada tipo de atendimento', () => {
